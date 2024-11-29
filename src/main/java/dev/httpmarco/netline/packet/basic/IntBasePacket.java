@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 @AllArgsConstructor
-public abstract class IntBasePacket extends Packet {
+public class IntBasePacket extends Packet {
 
     private int value;
 

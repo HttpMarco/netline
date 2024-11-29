@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @Accessors(fluent = true)
 @AllArgsConstructor
-public abstract class StringBasePacket extends Packet {
+public class StringBasePacket extends Packet {
 
     private String value;
 

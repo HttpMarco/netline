@@ -7,22 +7,20 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
-@Getter
 @Accessors(fluent = true)
+@Getter
 @AllArgsConstructor
-public class UuidBasePacket extends Packet {
+public class BooleanBasePacket extends Packet {
 
-     private UUID uuid;
+    private boolean value;
 
     @Override
-    public void read(@NotNull PacketBuffer buffer) {
-        this.uuid = buffer.readUniqueId();
+    public void read(@NotNull PacketBuffer packetBuffer) {
+        this.value = packetBuffer.readBoolean();
     }
 
     @Override
-    public void write(@NotNull PacketBuffer buffer) {
-        buffer.writeUniqueId(this.uuid);
+    public void write(@NotNull PacketBuffer packetBuffer) {
+        packetBuffer.writeBoolean(value);
     }
 }

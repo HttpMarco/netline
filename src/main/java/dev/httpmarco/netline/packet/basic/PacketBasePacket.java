@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @Accessors(fluent = true)
 @AllArgsConstructor
-public abstract class PacketBasePacket extends Packet {
+public class PacketBasePacket extends Packet {
 
     private Packet packet;
 
