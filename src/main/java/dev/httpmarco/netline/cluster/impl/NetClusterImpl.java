@@ -3,11 +3,15 @@ package dev.httpmarco.netline.cluster.impl;
 import dev.httpmarco.netline.cluster.NetCluster;
 import dev.httpmarco.netline.cluster.node.NetNode;
 import dev.httpmarco.netline.cluster.node.NetNodeData;
+import dev.httpmarco.netline.cluster.node.NetNodeState;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -20,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Accessors(fluent = true)
 public final class NetClusterImpl implements NetCluster {
 
+    private static final Logger log = LogManager.getLogger(NetClusterImpl.class);
     private final LocalNodeImpl localNode;
     private final List<NetNode> nodes = new LinkedList<>();
     private NetNode headNode;
@@ -27,7 +32,6 @@ public final class NetClusterImpl implements NetCluster {
     public NetClusterImpl() {
         // todo find a config
         this.localNode = new LocalNodeImpl(this, new NetNodeData("nodeA"));
-        this.nodes.add(this.localNode);
     }
 
     @Override
@@ -47,12 +51,44 @@ public final class NetClusterImpl implements NetCluster {
 
     @Override
     public void registerNode(NetNodeData data) {
-
+        this.nodes.add(new ExternalNodeImpl(this, data));
     }
 
     @Override
     public void unregisterNode(NetNodeData data) {
 
+    }
+
+
+    @Override
+    public @NotNull CompletableFuture<Void> boot() {
+        var future = new CompletableFuture<Void>();
+
+        log.debug("Boot cluster. Start local node server...");
+        // start local node
+        this.localNode.boot().whenComplete((unused, throwable) -> {
+
+            if(throwable != null) {
+                log.error("Failed to boot local node server", throwable);
+                future.completeExceptionally(throwable);
+                return;
+            }
+
+            log.debug("Local node server successfully booted.");
+
+            // read all nodes
+            //this.nodes.forEach(NetNode::boot);
+
+            // add self node in the node pool
+            this.nodes.add(this.localNode);
+            this.searchHeadNode();
+            log.debug("Select head node: {}", this.headNode.data().id());
+
+
+            this.localNode.state(NetNodeState.READY);
+            future.complete(null);
+        });
+        return future;
     }
 
     @Contract(pure = true)

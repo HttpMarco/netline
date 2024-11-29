@@ -6,7 +6,10 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="info">
+        <Logger name="io.netty5" level="OFF" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+        <Root level="DEBUG">
             <AppenderRef ref="ConsoleAppender"/>
         </Root>
     </Loggers>

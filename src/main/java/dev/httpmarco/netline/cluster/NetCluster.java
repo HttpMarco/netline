@@ -5,9 +5,12 @@ import dev.httpmarco.netline.cluster.impl.LocalNodeImpl;
 import dev.httpmarco.netline.cluster.node.NetNode;
 import dev.httpmarco.netline.cluster.node.NetNodeData;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public interface NetCluster extends Closeable {
 
@@ -59,5 +62,20 @@ public interface NetCluster extends Closeable {
      * @param data represent the information
      */
     void unregisterNode(NetNodeData data);
+
+    /**
+     * Boot the cluster
+     * This start the local node server
+     */
+    @SneakyThrows
+    default void bootSync(){
+        this.boot().get(5, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Boot the cluster and wait for the process to finish
+     * @return a future that will be completed when the boot process is done
+     */
+    CompletableFuture<Void> boot();
 
 }

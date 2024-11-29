@@ -2,6 +2,7 @@ package dev.httpmarco.netline.tests;
 
 import dev.httpmarco.netline.Net;
 import dev.httpmarco.netline.cluster.NetCluster;
+import dev.httpmarco.netline.cluster.node.NetNodeState;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -19,7 +20,8 @@ public final class NodeTest {
     @Order(1)
     @DisplayName("6.1 Start first node")
     public void testState() {
-
+        netClusterPartA.bootSync();
+        assert netClusterPartA.localNode().state() == NetNodeState.READY;
     }
 
     @Test
