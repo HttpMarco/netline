@@ -1,8 +1,6 @@
 package dev.httpmarco.netline;
 
 import dev.httpmarco.netline.client.NetClient;
-import dev.httpmarco.netline.cluster.NetCluster;
-import dev.httpmarco.netline.cluster.impl.NetClusterImpl;
 import dev.httpmarco.netline.server.NetServer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +22,4 @@ public final class Net {
         return new NetServer();
     }
 
-    @Contract(value = " -> new", pure = true)
-    public @NotNull NetCluster cluster() {
-        return new NetClusterImpl();
-    }
 }

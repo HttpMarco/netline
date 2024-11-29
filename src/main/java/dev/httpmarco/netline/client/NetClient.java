@@ -32,6 +32,7 @@ public class NetClient extends AbstractNetCompImpl<NetClientConfig> implements N
     private Bootstrap bootstrap;
     @Setter(AccessLevel.PACKAGE)
     @Nullable
+    @Getter
     private Channel channel;
     @Nullable
     @Getter(AccessLevel.PACKAGE)
