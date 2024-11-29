@@ -5,6 +5,7 @@ import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.packet.common.BroadcastPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public final class NetClientHandler extends NetCompHandler {
 
@@ -36,7 +37,7 @@ public final class NetClientHandler extends NetCompHandler {
     }
 
     @Override
-    public void broadcastDefinition(NetChannel incoming, BroadcastPacket packet) {
+    public void broadcastDefinition(NetChannel incoming, @NotNull BroadcastPacket packet) {
         netClient.callTracking(incoming, packet.packet());
     }
 }

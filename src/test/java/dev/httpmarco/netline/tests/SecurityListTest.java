@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("3 - White-/Blacklist test")
-public class SecurityListTest {
+public final class SecurityListTest {
 
     private static NetServer server;
 
@@ -28,7 +28,7 @@ public class SecurityListTest {
     @Test
     @Order(1)
     @DisplayName("3.1 Test hostname whitelist")
-    public void testHostNameWhitelist() {
+    public void testHostNameWhitelist() throws InterruptedException {
         var result = new AtomicBoolean(false);
         var whitelistedIp = "127.0.0.2";
 
@@ -37,6 +37,8 @@ public class SecurityListTest {
 
         var testClient = Net.line().client();
         testClient.bootSync();
+
+        Thread.sleep(1000);
 
         if(testClient.state() == NetClientState.CONNECTED) {
             testClient.closeSync();
@@ -53,7 +55,7 @@ public class SecurityListTest {
     @Test
     @Order(2)
     @DisplayName("3.2 Test hostname blacklist")
-    public void testBlacklist() {
+    public void testBlacklist() throws InterruptedException {
         var result = new AtomicBoolean(false);
         var blockedIp = "127.0.0.1";
 
@@ -63,6 +65,8 @@ public class SecurityListTest {
 
         var testClient = Net.line().client();
         testClient.bootSync();
+
+        Thread.sleep(1000);
 
         if(testClient.state() == NetClientState.CONNECTED) {
             testClient.closeSync();
