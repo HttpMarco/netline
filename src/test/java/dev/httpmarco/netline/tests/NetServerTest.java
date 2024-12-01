@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 @Nested
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("1 - Server-Client Binding Test")
+@DisplayName("1 - NetServer test")
 public class NetServerTest {
 
     private NetServer server;

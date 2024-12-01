@@ -1,5 +1,7 @@
 package dev.httpmarco.netline;
 
+import dev.httpmarco.netline.client.NetClient;
+import dev.httpmarco.netline.client.impl.NetClientImpl;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.server.impl.NetServerImpl;
 import lombok.AccessLevel;
@@ -19,5 +21,10 @@ public final class Net {
     @Contract(value = " -> new", pure = true)
     public @NotNull NetServer server() {
         return new NetServerImpl();
+    }
+
+    @Contract(value = " -> new", pure = true)
+    public @NotNull NetClient client() {
+        return new NetClientImpl();
     }
 }
