@@ -7,7 +7,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @SelectClasses({
-        CompBindingTest.class, PacketTransmitTest.class, SecurityListTest.class, PacketRequestTest.class, BroadcastTest.class, NodeTest.class
+        CompBindingTest.class, PacketTransmitTest.class, SecurityListTest.class, PacketRequestTest.class, BroadcastTest.class
 })
 @SuiteDisplayName("NetLine Test Suite")
 public class NetLineTestSuite {

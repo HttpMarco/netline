@@ -1,25 +1,23 @@
 package dev.httpmarco.netline;
 
-import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.server.NetServer;
+import dev.httpmarco.netline.server.impl.NetServerImpl;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Net {
 
-    @Contract(value = " -> new", pure = true)
+    @Contract(" -> new")
+    @SuppressWarnings("java:S2440")
     public static @NotNull Net line() {
         return new Net();
     }
 
     @Contract(value = " -> new", pure = true)
-    public @NotNull NetClient client() {
-        return new NetClient();
-    }
-
-    @Contract(value = " -> new", pure = true)
     public @NotNull NetServer server() {
-        return new NetServer();
+        return new NetServerImpl();
     }
-
 }
