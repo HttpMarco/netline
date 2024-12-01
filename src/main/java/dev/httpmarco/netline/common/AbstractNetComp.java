@@ -8,8 +8,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.io.IOException;
-
 @Accessors(fluent = true)
 @Getter(AccessLevel.PROTECTED)
 public abstract class AbstractNetComp implements NetComp {

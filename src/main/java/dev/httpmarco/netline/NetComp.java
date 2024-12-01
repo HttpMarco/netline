@@ -20,4 +20,10 @@ public interface NetComp {
      */
     NetFuture<Void> close();
 
+    /**
+     * Check if the component is available. Packets can be sent and received .
+     * @return true if the component is available, false otherwise.
+     */
+    boolean available();
+
 }

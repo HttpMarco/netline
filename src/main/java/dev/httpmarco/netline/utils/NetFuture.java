@@ -23,11 +23,13 @@ public final class NetFuture<T> extends CompletableFuture<T> {
      * @param value  Value to complete this future with
      */
     public void interpretFuture(@NotNull Future<?> future, T value) {
-        if (future.isSuccess()) {
-            this.complete(value);
-            return;
-        }
-        this.completeExceptionally(future.cause());
+        future.addListener(it -> {
+            if (future.isSuccess()) {
+                this.complete(value);
+                return;
+            }
+            this.completeExceptionally(future.cause());
+        });
     }
 
     @SneakyThrows
@@ -35,8 +37,29 @@ public final class NetFuture<T> extends CompletableFuture<T> {
         return this.get(5, TimeUnit.SECONDS);
     }
 
+    public @NotNull NetFuture<T> waitFor(Future<?> future) {
+        var binding = new NetFuture<T>();
+
+        this.whenComplete((t, throwable) -> {
+            if (throwable != null) {
+                binding.completeExceptionally(throwable);
+                return;
+            }
+
+            future.addListener(it -> {
+                if (it.isSuccess()) {
+                    binding.complete(null);
+                } else {
+                    binding.completeExceptionally(it.cause());
+                }
+            });
+        });
+        return binding;
+    }
+
     /**
      * Transform a Netty future into a NetFuture and use interpretFuture to complete it
+     *
      * @param it Netty future
      * @return NetFuture
      */

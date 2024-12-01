@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.server.common;
 
+import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.utils.NetFuture;
@@ -7,8 +8,6 @@ import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.ChannelOption;
 import io.netty5.channel.EventLoopGroup;
-
-import java.io.IOException;
 
 public abstract class AbstractNetServer extends AbstractNetComp implements NetServer {
 
@@ -24,7 +23,7 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
     public NetFuture<Void> boot() {
         return NetFuture.interpretFuture(new ServerBootstrap()
                 .group(mainGroup(), this.workerGroup)
-                //.childHandler(new NetChannelInitializer(handler()))
+                .childHandler(new NetChannelInitializer())
                 .channelFactory(NetworkNettyUtils.generateChannelFactory())
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.IP_TOS, 24)
@@ -34,8 +33,11 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
 
     @Override
     public NetFuture<Void> close() {
-        // todo future bind
-        this.workerGroup.shutdownGracefully();
-        return super.close();
+        return super.close().waitFor(this.workerGroup.terminationFuture());
+    }
+
+    @Override
+    public boolean available() {
+        return false;
     }
 }
