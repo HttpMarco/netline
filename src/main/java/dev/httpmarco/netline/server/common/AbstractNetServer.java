@@ -8,10 +8,13 @@ import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.ChannelOption;
 import io.netty5.channel.EventLoopGroup;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class AbstractNetServer extends AbstractNetComp implements NetServer {
 
     private final static int NET_SERVER_GROUP_THREADS = 1;
+    private static final Logger log = LogManager.getLogger(AbstractNetServer.class);
 
     private final EventLoopGroup workerGroup = NetworkNettyUtils.createEventLoopGroup(0);
 
@@ -21,7 +24,7 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
 
     @Override
     public NetFuture<Void> boot() {
-        return NetFuture.interpretFuture(new ServerBootstrap()
+        NetFuture<Void> future = NetFuture.interpretFuture(new ServerBootstrap()
                 .group(mainGroup(), this.workerGroup)
                 .childHandler(new NetChannelInitializer())
                 .channelFactory(NetworkNettyUtils.generateChannelFactory())
@@ -29,15 +32,18 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
                 .childOption(ChannelOption.IP_TOS, 24)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .bind("0.0.0.0", 9090));
+
+        future.whenCompleteSuccessfully(it -> {
+            // now we can allow connections
+            this.available(true);
+            log.debug("The server is now running on port 9090");
+        });
+
+        return future;
     }
 
     @Override
     public NetFuture<Void> close() {
         return super.close().waitFor(this.workerGroup.terminationFuture());
-    }
-
-    @Override
-    public boolean available() {
-        return false;
     }
 }

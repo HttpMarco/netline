@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public final class NetFuture<T> extends CompletableFuture<T> {
 
@@ -55,6 +56,14 @@ public final class NetFuture<T> extends CompletableFuture<T> {
             });
         });
         return binding;
+    }
+
+    public void whenCompleteSuccessfully(@NotNull Consumer<T> consumer) {
+        this.whenComplete((t, throwable) -> {
+            if (throwable == null) {
+                consumer.accept(t);
+            }
+        });
     }
 
     /**
