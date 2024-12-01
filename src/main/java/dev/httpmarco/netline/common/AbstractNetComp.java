@@ -1,6 +1,7 @@
 package dev.httpmarco.netline.common;
 
 import dev.httpmarco.netline.NetComp;
+import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.channel.EventLoopGroup;
 import lombok.AccessLevel;
@@ -26,7 +27,7 @@ public abstract class AbstractNetComp implements NetComp {
     }
 
     @Override
-    public void close() throws IOException {
-        this.mainGroup.shutdownGracefully();
+    public NetFuture<Void> close()  {
+        return NetFuture.interpretFuture(this.mainGroup.shutdownGracefully());
     }
 }

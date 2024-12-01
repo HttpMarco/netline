@@ -33,8 +33,9 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
     }
 
     @Override
-    public void close() throws IOException {
+    public NetFuture<Void> close() {
+        // todo future bind
         this.workerGroup.shutdownGracefully();
-        super.close();
+        return super.close();
     }
 }

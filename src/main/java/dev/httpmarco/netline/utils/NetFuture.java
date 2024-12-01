@@ -1,9 +1,11 @@
 package dev.httpmarco.netline.utils;
 
 import io.netty5.util.concurrent.Future;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public final class NetFuture<T> extends CompletableFuture<T> {
 
@@ -26,6 +28,11 @@ public final class NetFuture<T> extends CompletableFuture<T> {
             return;
         }
         this.completeExceptionally(future.cause());
+    }
+
+    @SneakyThrows
+    public T sync() {
+        return this.get(5, TimeUnit.SECONDS);
     }
 
     /**
