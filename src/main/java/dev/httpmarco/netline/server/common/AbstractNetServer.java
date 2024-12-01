@@ -3,6 +3,7 @@ package dev.httpmarco.netline.server.common;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.server.NetServer;
+import dev.httpmarco.netline.server.NetServerConfig;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.ServerBootstrap;
@@ -11,7 +12,7 @@ import io.netty5.channel.EventLoopGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class AbstractNetServer extends AbstractNetComp implements NetServer {
+public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig> implements NetServer {
 
     private final static int NET_SERVER_GROUP_THREADS = 1;
     private static final Logger log = LogManager.getLogger(AbstractNetServer.class);
@@ -19,7 +20,7 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
     private final EventLoopGroup workerGroup = NetworkNettyUtils.createEventLoopGroup(0);
 
     public AbstractNetServer() {
-        super(NET_SERVER_GROUP_THREADS);
+        super(new NetServerConfig(), NET_SERVER_GROUP_THREADS);
     }
 
     @Override
@@ -31,7 +32,7 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.IP_TOS, 24)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
-                .bind("0.0.0.0", 9090));
+                .bind(config().hostname(), config().port()));
 
         future.whenCompleteSuccessfully(it -> {
             // now we can allow connections

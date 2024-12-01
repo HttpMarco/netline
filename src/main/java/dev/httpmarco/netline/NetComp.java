@@ -6,7 +6,7 @@ import java.io.Closeable;
 /**
  * A network component.
  */
-public interface NetComp {
+public interface NetComp<C extends NetConfig> {
 
     /**
      * Boot the component.
@@ -25,5 +25,11 @@ public interface NetComp {
      * @return true if the component is available, false otherwise.
      */
     boolean available();
+
+    /**
+     * Get the configuration of the component.
+     * @return the configuration of the component.
+     */
+    C config();
 
 }

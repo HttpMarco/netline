@@ -45,7 +45,21 @@ public class NetServerTest {
     @Order(4)
     @DisplayName("1.4 Ping server")
     public void pingServer() {
-        assert NetworkTestUtils.isServerReachable("localhost", 9090);
+        assert NetworkTestUtils.isServerReachable(server.config().hostname(), server.config().port());
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("1.5 Use custom hostname and port configuration")
+    public void testConfigurationUse() {
+        var server = Net.line().server();
+
+        server.config().hostname("0.0.0.0");
+        server.config().port(9093);
+
+        server.boot().sync();
+        assert server.available();
+        assert NetworkTestUtils.isServerReachable(server.config().hostname(), server.config().port());
     }
 
     @AfterEach
