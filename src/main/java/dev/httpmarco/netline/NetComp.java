@@ -6,7 +6,7 @@ import java.io.Closeable;
 /**
  * A network component.
  */
-public interface NetComp<C extends NetConfig> {
+public interface NetComp<C extends NetConfig> extends Available {
 
     /**
      * Boot the component.
@@ -21,15 +21,15 @@ public interface NetComp<C extends NetConfig> {
     NetFuture<Void> close();
 
     /**
-     * Check if the component is available. Packets can be sent and received .
-     * @return true if the component is available, false otherwise.
-     */
-    boolean available();
-
-    /**
      * Get the configuration of the component.
      * @return the configuration of the component.
      */
     C config();
+
+    /**
+     * Get the handler of the component.
+     * @return the handler of the component.
+     */
+    NetCompHandler handler();
 
 }

@@ -1,9 +1,11 @@
 package dev.httpmarco.netline.server.common;
 
+import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.server.NetServerConfig;
+import dev.httpmarco.netline.server.NetServerHandler;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.ServerBootstrap;
@@ -27,7 +29,7 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
     public NetFuture<Void> boot() {
         var future = NetFuture.interpretFuture(new ServerBootstrap()
                 .group(mainGroup(), this.workerGroup)
-                .childHandler(new NetChannelInitializer())
+                .childHandler(new NetChannelInitializer(handler()))
                 .channelFactory(NetworkNettyUtils.generateChannelFactory())
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.IP_TOS, 24)
@@ -46,5 +48,15 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
     @Override
     public NetFuture<Void> close() {
         return super.close().waitFor(this.workerGroup.shutdownGracefully());
+    }
+
+    @Override
+    public NetCompHandler handler() {
+        return new NetServerHandler();
+    }
+
+    @Override
+    public int amountOfClients() {
+        return -1;
     }
 }
