@@ -28,6 +28,8 @@ public abstract class AbstractNetComp implements NetComp {
 
     @Override
     public NetFuture<Void> close()  {
+        this.available = false;
+        // we deny incoming and outgoing packets
         return NetFuture.interpretFuture(this.mainGroup.shutdownGracefully());
     }
 }

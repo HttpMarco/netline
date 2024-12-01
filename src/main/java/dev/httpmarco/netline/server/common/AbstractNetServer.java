@@ -24,7 +24,7 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
 
     @Override
     public NetFuture<Void> boot() {
-        NetFuture<Void> future = NetFuture.interpretFuture(new ServerBootstrap()
+        var future = NetFuture.interpretFuture(new ServerBootstrap()
                 .group(mainGroup(), this.workerGroup)
                 .childHandler(new NetChannelInitializer())
                 .channelFactory(NetworkNettyUtils.generateChannelFactory())
@@ -44,6 +44,6 @@ public abstract class AbstractNetServer extends AbstractNetComp implements NetSe
 
     @Override
     public NetFuture<Void> close() {
-        return super.close().waitFor(this.workerGroup.terminationFuture());
+        return super.close().waitFor(this.workerGroup.shutdownGracefully());
     }
 }
