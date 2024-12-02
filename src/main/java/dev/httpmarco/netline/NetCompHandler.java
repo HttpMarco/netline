@@ -11,4 +11,10 @@ public interface NetCompHandler extends ChannelHandler {
      */
     void netChannelClose(NetChannel channel);
 
+
+    /**
+     * Call if the channel is now open and a new connection
+     * @param channel a new channel
+     */
+    void netChannelOpen(NetChannel channel);
 }
