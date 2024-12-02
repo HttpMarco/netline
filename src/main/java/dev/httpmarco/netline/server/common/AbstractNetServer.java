@@ -1,6 +1,7 @@
 package dev.httpmarco.netline.server.common;
 
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.server.NetServer;
@@ -14,7 +15,7 @@ import io.netty5.channel.EventLoopGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig> implements NetServer {
+public abstract class AbstractNetServer<T> extends AbstractNetComp<NetServerConfig> implements NetServer {
 
     private final static int NET_SERVER_GROUP_THREADS = 1;
     private static final Logger log = LogManager.getLogger(AbstractNetServer.class);

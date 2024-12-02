@@ -2,6 +2,7 @@ package dev.httpmarco.netline.common;
 
 import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.NetConfig;
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.channel.EventLoopGroup;

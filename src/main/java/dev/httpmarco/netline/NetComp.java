@@ -1,5 +1,6 @@
 package dev.httpmarco.netline;
 
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.utils.NetFuture;
 import java.io.Closeable;
 

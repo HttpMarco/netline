@@ -1,6 +1,7 @@
 package dev.httpmarco.netline.client.common;
 
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.client.NetClientConfig;
