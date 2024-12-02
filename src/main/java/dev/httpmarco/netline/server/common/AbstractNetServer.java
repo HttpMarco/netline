@@ -47,6 +47,7 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     @Override
     public NetFuture<Void> close() {
+        log.debug("Closing the server...");
         return super.close().waitFor(this.workerGroup.shutdownGracefully());
     }
 

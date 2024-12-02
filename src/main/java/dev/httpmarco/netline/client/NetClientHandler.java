@@ -11,7 +11,6 @@ public final class NetClientHandler extends AbstractNetCompHandler {
 
     @Override
     public void netChannelClose() {
-        System.out.println("polo");
-        netClient.available(false);
+        netClient.close();
     }
 }

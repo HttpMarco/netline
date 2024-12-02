@@ -43,4 +43,19 @@ public class NetClientTest {
         assert server.amountOfClients() == 0;
         assert !this.client.available();
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("2.3 Clean client disconnect")
+    public void testClientDisconnect() {
+        var server = Net.line().server();
+
+        server.boot().sync();
+        assert server.available();
+
+        this.client.boot().sync();
+        assert this.client.available();
+        this.client.close().sync();
+        assert !server.available();
+    }
 }
