@@ -1,6 +1,8 @@
 package dev.httpmarco.netline.packet;
 
-public abstract class Packet {
+import dev.httpmarco.netline.tracking.Tracking;
+
+public abstract class Packet implements Tracking {
 
     public abstract void read(PacketBuffer buffer);
 
