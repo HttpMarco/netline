@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 public abstract class AbstractNetConfig implements NetConfig {
 
     private String hostname = "localhost";
-    private int port = 9091;
+    private int port = 9090;
 
     @Override
     public void hostname(String hostname) {
