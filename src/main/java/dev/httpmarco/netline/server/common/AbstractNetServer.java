@@ -47,7 +47,7 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
         future.whenCompleteSuccessfully(it -> {
             // now we can allow connections
             this.available(true);
-            log.debug("The server is now running on port 9090");
+            log.debug("The server is now running on port {}", config().port());
         });
 
         return future;
@@ -61,12 +61,12 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     @Override
     public NetCompHandler handler() {
-        return new NetServerHandler();
+        return new NetServerHandler(this);
     }
 
     @Override
     public int amountOfClients() {
-        return -1;
+        return this.clients.size();
     }
 
     @Override
@@ -77,5 +77,9 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
     @Override
     public Collection<NetChannel> availableClients() {
         return this.clients.stream().filter(Available::available).toList();
+    }
+
+    public void registerChannel(NetChannel channel) {
+        this.clients.add(channel);
     }
 }
