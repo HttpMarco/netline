@@ -8,7 +8,7 @@ import java.util.UUID;
  * Build a new request to be sent to the server.
  * @param <R> the response type
  */
-public interface NetRequest<R> {
+public interface NetRequest<R, A> {
 
     /**
      * The unique id of the request.
@@ -20,6 +20,6 @@ public interface NetRequest<R> {
      * Send the request to the server.
      * @return a future that will be completed when the response is received
      */
-    NetFuture<R> send();
+    NetFuture<A> send(R request);
 
 }
