@@ -35,6 +35,8 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
             // set channel name here
             // check security rules here
             channel.updateId(id);
+
+            log.debug("Client {} has been authenticated", id);
             return true;
         });
     }

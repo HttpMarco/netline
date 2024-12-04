@@ -49,7 +49,6 @@ public abstract class AbstractNetCompHandler extends SimpleChannelInboundHandler
             var respond = responder.respondWith(RespondPacketTranslator.translatePacket(request.request()), channel);
             var responsePacket = RespondPacketTranslator.translate(respond);
 
-            System.out.println(channel.id());
             // we send the response back to the client
             channel.send(new ResponsePacket(request.id(), responsePacket));
             return;
