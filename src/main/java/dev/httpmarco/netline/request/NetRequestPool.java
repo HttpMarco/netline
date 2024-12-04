@@ -15,10 +15,10 @@ import java.util.UUID;
 @UtilityClass
 public final class NetRequestPool {
 
-    private final Map<UUID, Request<?>> requests = new HashMap<>();
+    private final Map<UUID, Request<?, ?>> requests = new HashMap<>();
     private static final Logger log = LogManager.getLogger(NetRequestPool.class);
 
-    public void put(Request<?> request) {
+    public void put(Request<?, ?> request) {
         requests.put(request.id(), request);
     }
 

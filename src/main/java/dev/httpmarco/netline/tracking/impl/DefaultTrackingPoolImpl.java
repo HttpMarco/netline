@@ -1,6 +1,5 @@
 package dev.httpmarco.netline.tracking.impl;
 
-import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.request.RequestChannelResponder;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.tracking.ChannelTracker;

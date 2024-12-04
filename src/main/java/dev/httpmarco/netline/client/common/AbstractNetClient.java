@@ -59,7 +59,7 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
     }
 
     @Override
-    public <T> NetRequest<T> request(@NotNull RequestScheme<?, T> id) {
+    public <R, A> NetRequest<R, A> request(@NotNull RequestScheme<R, A> id) {
         return new Request<>(id, this.channel);
     }
 }

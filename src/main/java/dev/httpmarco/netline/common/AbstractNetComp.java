@@ -4,11 +4,9 @@ import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.NetConfig;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.packet.Packet;
-import dev.httpmarco.netline.request.NetRequest;
 import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.request.RequestChannelResponder;
 import dev.httpmarco.netline.request.RequestScheme;
-import dev.httpmarco.netline.request.packets.RequestPacket;
 import dev.httpmarco.netline.tracking.ChannelTracker;
 import dev.httpmarco.netline.tracking.Tracking;
 import dev.httpmarco.netline.tracking.TrackingPool;
@@ -19,7 +17,6 @@ import io.netty5.channel.EventLoopGroup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -80,10 +77,5 @@ public abstract class AbstractNetComp<C extends NetConfig> implements NetComp<C>
     @Override
     public void callRequest(NetChannel channel, UUID requestId, Packet response) {
         NetRequestPool.applyRequest(requestId, channel, response);
-    }
-
-    @Override
-    public <T> NetRequest<T> request(@NotNull RequestScheme<?, T> id) {
-        return null;
     }
 }

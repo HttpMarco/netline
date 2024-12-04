@@ -27,7 +27,8 @@ public final class NetClientHandler extends AbstractNetCompHandler {
         channel.updateId("LOCAL_ETST");
         client.channel(channel);
 
-        client.request(RequestScheme.CLIENT_AUTH).send().whenComplete((result, throwable) -> {
+        // todo use right config id
+        client.request(RequestScheme.CLIENT_AUTH).send("LOCAL").whenComplete((result, throwable) -> {
             if (result) {
                 client.available(true);
                 client.bootFuture().complete();
