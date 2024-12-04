@@ -4,7 +4,9 @@ import dev.httpmarco.netline.Available;
 import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
+import dev.httpmarco.netline.channel.common.AbstractNetChannel;
 import dev.httpmarco.netline.common.AbstractNetComp;
+import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.server.NetServerConfig;
 import dev.httpmarco.netline.server.NetServerHandler;
@@ -20,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig> implements NetServer {
 
@@ -31,6 +34,13 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     public AbstractNetServer() {
         super(new NetServerConfig(), NET_SERVER_GROUP_THREADS);
+
+        this.waitFor(RequestScheme.CLIENT_AUTH, (id, channel) -> {
+            // set channel name here
+            // check security rules here
+            channel.updateId(id);
+            return true;
+        });
     }
 
     @Override
@@ -56,7 +66,16 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
     @Override
     public NetFuture<Void> close() {
         log.debug("Closing the server...");
-        return super.close().waitFor(this.workerGroup.shutdownGracefully());
+
+        var future = new NetFuture<Void>();
+
+        CompletableFuture.allOf(clients.stream().map(NetChannel::close).toArray(value -> new CompletableFuture[clients.size()]))
+                .whenComplete((unused, throwable) -> super.close().waitFor(this.workerGroup.shutdownGracefully())
+                        .whenComplete((it, th) -> {
+                            future.complete();
+                        }));
+
+        return future;
     }
 
     @Override
@@ -66,6 +85,7 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     @Override
     public int amountOfClients() {
+        System.out.println("size: " + this.clients.size());
         return this.clients.size();
     }
 
@@ -81,5 +101,10 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     public void registerChannel(NetChannel channel) {
         this.clients.add(channel);
+    }
+
+    public void unregisterChannel(NetChannel channel) {
+        System.err.println("unregister: " + channel.toString());
+        this.clients.remove(channel);
     }
 }

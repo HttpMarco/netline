@@ -7,25 +7,31 @@ import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.client.NetClientConfig;
 import dev.httpmarco.netline.client.NetClientHandler;
 import dev.httpmarco.netline.common.AbstractNetComp;
+import dev.httpmarco.netline.request.NetRequest;
+import dev.httpmarco.netline.request.RequestScheme;
+import dev.httpmarco.netline.request.impl.Request;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.Bootstrap;
 import io.netty5.channel.ChannelOption;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Setter
 @Getter
 @Accessors(fluent = true)
 @Log4j2
 public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig> implements NetClient {
 
     @Nullable
-    @Setter(AccessLevel.PACKAGE)
     private NetChannel channel;
+
+    @Nullable
+    private NetFuture<Void> bootFuture;
 
     public AbstractNetClient() {
         super(new NetClientConfig());
@@ -33,7 +39,8 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
 
     @Override
     public NetFuture<Void> boot() {
-        var future = NetFuture.interpretFuture(new Bootstrap()
+        this.bootFuture = new NetFuture<>();
+        var connect = new Bootstrap()
                 .group(mainGroup())
                 .channelFactory(NetworkNettyUtils::createChannelFactory)
                 .handler(new NetChannelInitializer(handler()))
@@ -41,19 +48,18 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.IP_TOS, 24)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000)
-                .connect(config().hostname(), config().port()));
+                .connect(config().hostname(), config().port());
 
-        future.whenCompleteSuccessfully(it -> {
-            // now we can allow connections
-            this.available(true);
-            log.debug("The client successfully connected to the server!");
-        });
-
-        return future;
+        return this.bootFuture;
     }
 
     @Override
     public NetCompHandler handler() {
         return new NetClientHandler(this);
+    }
+
+    @Override
+    public <T> NetRequest<T> request(@NotNull RequestScheme<?, T> id) {
+        return new Request<>(id, this.channel);
     }
 }

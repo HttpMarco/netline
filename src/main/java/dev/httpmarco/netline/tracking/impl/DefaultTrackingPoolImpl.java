@@ -12,18 +12,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
 @Log4j2
 public final class DefaultTrackingPoolImpl implements TrackingPool {
 
-    private final Map<Class<? extends Tracking>, Map<UUID, BiConsumer<NetChannel, Tracking>>> trackers = new HashMap<>();
+    private final Map<Class<? extends Tracking>, Map<UUID, ChannelTracker<?>>> trackers = new HashMap<>();
     private final Map<RequestScheme<?, ?>, RequestChannelResponder<?, ?>> responders = new HashMap<>();
 
     @Override
     public <A extends Tracking> @NotNull UUID put(Class<A> tracking, ChannelTracker<A> tracker) {
         log.debug("Registering tracker for tracking: {}", tracking);
         var id = UUID.randomUUID();
+
+        var currentTrackers = this.trackers.getOrDefault(tracking, new HashMap<>());
+        currentTrackers.put(id, tracker);
+        this.trackers.put(tracking, currentTrackers);
 
         return id;
     }

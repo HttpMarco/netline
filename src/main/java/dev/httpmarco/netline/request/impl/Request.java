@@ -2,7 +2,6 @@ package dev.httpmarco.netline.request.impl;
 
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.request.NetRequest;
-import dev.httpmarco.netline.request.NetRequestMapper;
 import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.request.packets.RequestPacket;
@@ -22,6 +21,7 @@ public final class Request<R> implements NetRequest<R> {
     private final UUID id;
     private final RequestScheme<?, R> requestScheme;
     private final NetChannel channel;
+    private final NetFuture<R> completeFuture = new NetFuture<R>();
 
     public Request(RequestScheme<?, R> requestScheme, @NotNull NetChannel channel) {
         this.channel = channel;
@@ -29,20 +29,17 @@ public final class Request<R> implements NetRequest<R> {
         this.id = UUID.randomUUID();
     }
 
-    @Contract(pure = true)
-    @Override
-    public @Nullable NetRequestMapper<R> mapResponse() {
-        return null;
-    }
-
     @Override
     public @NotNull NetFuture<R> send() {
-        var future = new NetFuture<R>();
-
         // register the request for identification the response
         NetRequestPool.put(this);
 
         this.channel.send(new RequestPacket(requestScheme().id(), id));
-        return future;
+        return completeFuture;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void complete(Object response) {
+        completeFuture.complete((R) response);
     }
 }

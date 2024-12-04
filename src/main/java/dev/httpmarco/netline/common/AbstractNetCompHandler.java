@@ -1,21 +1,85 @@
 package dev.httpmarco.netline.common;
 
+import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.channel.NetChannel;
+import dev.httpmarco.netline.channel.impl.DefaultNetChannel;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.request.packets.RequestPacket;
+import dev.httpmarco.netline.request.packets.ResponsePacket;
+import dev.httpmarco.netline.request.utils.RespondPacketTranslator;
+import io.netty5.channel.Channel;
 import io.netty5.channel.ChannelHandlerContext;
 import io.netty5.channel.SimpleChannelInboundHandler;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 
+@Log4j2
+@Getter
+@Accessors(fluent = true)
+@AllArgsConstructor
 public abstract class AbstractNetCompHandler extends SimpleChannelInboundHandler<Packet> implements NetCompHandler {
 
-    @Override
-    protected void messageReceived(ChannelHandlerContext ctx, Packet msg)  {
+    private NetComp<?> netComp;
 
+    @Override
+    @SneakyThrows
+    public void messageReceived(@NotNull ChannelHandlerContext ctx, Packet packet) {
+        var channel = findChannel(ctx.channel());
+
+        if (channel == null) {
+            ctx.close();
+            return;
+        }
+
+        if (packet instanceof RequestPacket request) {
+            // block not registered request
+            if (!netComp.trackingPool().responderPresent(request.requestId())) {
+                log.debug("No responder found for request id: {}", request.requestId());
+                return;
+            }
+
+            var responder = this.netComp.trackingPool().responder(request.requestId());
+
+            log.debug("Call responder for request id: {}", request.requestId());
+            var respond = responder.respond(null, channel);
+            var responsePacket = RespondPacketTranslator.translate(respond);
+
+            System.out.println(channel.id());
+            // we send the response back to the client
+            channel.send(new ResponsePacket(request.id(), responsePacket));
+            return;
+        }
+
+        if(packet instanceof ResponsePacket response) {
+             this.netComp.callRequest(channel, response.id(), response.packet());
+            return;
+        }
+
+        this.netComp.call(channel, packet);
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        // todo
-        this.netChannelClose(null);
+    public void channelActive(@NotNull ChannelHandlerContext ctx) {
+        /// todo: generate by comp factory
+        var newChannel = new DefaultNetChannel(ctx.channel());
+
+        this.netChannelOpen(newChannel);
+    }
+
+    @Override
+    public void channelInactive(@NotNull ChannelHandlerContext ctx) {
+        this.netChannelClose(findChannel(ctx.channel()));
+    }
+
+    public abstract NetChannel findChannel(Channel channel);
+
+    @Override
+    public void channelExceptionCaught(ChannelHandlerContext ctx, @NotNull Throwable cause) {
+        log.error("Error while netty communication", cause);
     }
 }

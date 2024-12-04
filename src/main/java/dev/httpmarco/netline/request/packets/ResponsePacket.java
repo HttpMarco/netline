@@ -4,11 +4,15 @@ import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.packet.PacketAllocator;
 import dev.httpmarco.netline.packet.PacketBuffer;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@Getter
+@Accessors(fluent = true)
 @AllArgsConstructor
 public final class ResponsePacket extends Packet {
 
