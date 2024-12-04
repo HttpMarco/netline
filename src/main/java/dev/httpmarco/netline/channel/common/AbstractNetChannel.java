@@ -5,9 +5,7 @@ import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.utils.NetFuture;
 import io.netty5.channel.Channel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +26,7 @@ public abstract class AbstractNetChannel implements NetChannel {
 
     @Override
     public boolean available() {
-        // todo savety thing to check if the channel is still active
-        return channel != null && channel.isActive() && clientAddress != null; //&& id != null;
+        return channel != null && channel.isActive() && clientAddress != null && id != null;
     }
 
     @Override
