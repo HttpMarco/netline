@@ -40,7 +40,7 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
     @Override
     public NetFuture<Void> boot() {
         this.bootFuture = new NetFuture<>();
-        var connect = new Bootstrap()
+        new Bootstrap()
                 .group(mainGroup())
                 .channelFactory(NetworkNettyUtils::createChannelFactory)
                 .handler(new NetChannelInitializer(handler()))
@@ -48,7 +48,12 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.IP_TOS, 24)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000)
-                .connect(config().hostname(), config().port());
+                .connect(config().hostname(), config().port()).addListener(future -> {
+                    // we wait for the identification -> success future
+                    if(future.isFailed() && bootFuture != null) {
+                        this.bootFuture.completeExceptionally(future.cause());
+                    }
+                });
 
         return this.bootFuture;
     }

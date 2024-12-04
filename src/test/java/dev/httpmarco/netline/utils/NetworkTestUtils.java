@@ -11,7 +11,7 @@ public final class NetworkTestUtils {
 
     public boolean isServerReachable(String host, int port) {
         try (var socket = new Socket()) {
-            socket.connect(new InetSocketAddress(host, port), 2000);
+            socket.connect(new InetSocketAddress(host, port), 1000);
             return true;
         } catch (IOException e) {
             return false;
