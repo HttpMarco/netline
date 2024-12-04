@@ -17,12 +17,6 @@ public interface NetRequest<R> {
     UUID id();
 
     /**
-     * Mapper for response.
-     * @return the response mapper
-     */
-    NetRequestMapper<R> mapResponse();
-
-    /**
      * Send the request to the server.
      * @return a future that will be completed when the response is received
      */
