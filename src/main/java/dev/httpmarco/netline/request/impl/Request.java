@@ -5,41 +5,41 @@ import dev.httpmarco.netline.request.NetRequest;
 import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.request.packets.RequestPacket;
+import dev.httpmarco.netline.request.utils.RespondPacketTranslator;
 import dev.httpmarco.netline.utils.NetFuture;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.UUID;
 
 @Getter
 @Accessors(fluent = true)
-public final class Request<R> implements NetRequest<R> {
+public final class Request<R, A> implements NetRequest<R, A> {
 
     private final UUID id;
-    private final RequestScheme<?, R> requestScheme;
+    private final RequestScheme<R, A> requestScheme;
     private final NetChannel channel;
-    private final NetFuture<R> completeFuture = new NetFuture<R>();
+    private final NetFuture<A> completeFuture = new NetFuture<>();
 
-    public Request(RequestScheme<?, R> requestScheme, @NotNull NetChannel channel) {
+    public Request(RequestScheme<R, A> requestScheme, @NotNull NetChannel channel) {
         this.channel = channel;
         this.requestScheme = requestScheme;
         this.id = UUID.randomUUID();
     }
 
     @Override
-    public @NotNull NetFuture<R> send() {
+    @SneakyThrows
+    public @NotNull NetFuture<A> send(R request) {
         // register the request for identification the response
         NetRequestPool.put(this);
 
-        this.channel.send(new RequestPacket(requestScheme().id(), id));
+        this.channel.send(new RequestPacket(requestScheme().id(), id, RespondPacketTranslator.translate(request)));
         return completeFuture;
     }
 
     @SuppressWarnings("unchecked")
     public void complete(Object response) {
-        completeFuture.complete((R) response);
+        completeFuture.complete((A) response);
     }
 }
