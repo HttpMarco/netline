@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.client.common;
 
+import dev.httpmarco.netline.NetAddress;
 import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
@@ -7,12 +8,14 @@ import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.client.NetClientConfig;
 import dev.httpmarco.netline.client.NetClientHandler;
 import dev.httpmarco.netline.common.AbstractNetComp;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.NetRequest;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.request.impl.Request;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.Bootstrap;
+import io.netty5.channel.Channel;
 import io.netty5.channel.ChannelOption;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +31,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig> implements NetClient {
 
     @Nullable
-    private NetChannel channel;
+    @Setter
+    private Channel channel;
 
     @Nullable
     private NetFuture<Void> bootFuture;
@@ -65,6 +69,26 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
 
     @Override
     public <R, A> NetRequest<R, A> request(@NotNull RequestScheme<R, A> id) {
-        return new Request<>(id, this.channel);
+        return new Request<>(id, this);
+    }
+
+    @Override
+    public void send(Packet packet) {
+        this.channel.writeAndFlush(packet);
+    }
+
+    @Override
+    public NetAddress clientAddress() {
+        return null;
+    }
+
+    @Override
+    public void updateId(String id) {
+        this.config().id = id;
+    }
+
+    @Override
+    public String id() {
+        return this.config().id;
     }
 }

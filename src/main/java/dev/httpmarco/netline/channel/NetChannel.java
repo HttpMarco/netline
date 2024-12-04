@@ -36,6 +36,10 @@ public interface NetChannel extends Available, Closeable {
      */
     void send(Packet packet);
 
+    /**
+     * Update the current client id
+     * @param id new id
+     */
     void updateId(String id);
 
 }

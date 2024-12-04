@@ -25,7 +25,7 @@ public final class NetClientHandler extends AbstractNetCompHandler {
 
     @Override
     public void netChannelOpen(@NotNull NetChannel channel) {
-        client.channel(channel);
+        client.channel(channel.channel());
 
         if(client.bootFuture() == null) {
             log.warn("Client boot future is null. So we can't proceed with the channel open event.");
@@ -44,6 +44,6 @@ public final class NetClientHandler extends AbstractNetCompHandler {
 
     @Override
     public NetChannel findChannel(Channel channel) {
-        return client.channel();
+        return this.client;
     }
 }
