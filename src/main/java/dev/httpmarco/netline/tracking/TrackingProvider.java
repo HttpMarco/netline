@@ -81,7 +81,7 @@ public interface TrackingProvider {
      * @return the request
      * @param <T> the request type
      */
-    <T> NetRequest<T> request(@NotNull RequestScheme<?, T> id);
+   <R, A> NetRequest<R, A> request(@NotNull RequestScheme<R, A> id);
 
     /**
      * Call a request with a response
