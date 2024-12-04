@@ -27,3 +27,9 @@ In the following example, we send a synchronous request using the previously def
 ```java
 var timeResuelt = client.request(myRequestScheme).send("TestProfile").sync();
 ```
+
+
+[ ] subscribe tracking and send the server the information about the tracking 
+[ ] tracking readme
+[ ] dependency readme
+[ ] update id 
