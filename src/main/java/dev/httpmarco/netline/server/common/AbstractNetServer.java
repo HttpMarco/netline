@@ -4,7 +4,6 @@ import dev.httpmarco.netline.Available;
 import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
-import dev.httpmarco.netline.channel.common.AbstractNetChannel;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.server.NetServer;
@@ -18,10 +17,7 @@ import io.netty5.channel.EventLoopGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig> implements NetServer {
@@ -71,9 +67,7 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
         CompletableFuture.allOf(clients.stream().map(NetChannel::close).toArray(value -> new CompletableFuture[clients.size()]))
                 .whenComplete((unused, throwable) -> super.close().waitFor(this.workerGroup.shutdownGracefully())
-                        .whenComplete((it, th) -> {
-                            future.complete();
-                        }));
+                        .whenComplete((it, th) -> future.complete()));
 
         return future;
     }
@@ -85,7 +79,6 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     @Override
     public int amountOfClients() {
-        System.out.println("size: " + this.clients.size());
         return this.clients.size();
     }
 
@@ -104,7 +97,6 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
     }
 
     public void unregisterChannel(NetChannel channel) {
-        System.err.println("unregister: " + channel.toString());
         this.clients.remove(channel);
     }
 }
