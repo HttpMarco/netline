@@ -64,4 +64,9 @@ public final class DefaultTrackingPoolImpl implements TrackingPool {
     public RequestChannelResponder<?, ?> responder(String requestID) {
         return this.responders.get(responders.keySet().stream().filter(it -> it.id().equals(requestID)).findFirst().orElse(null));
     }
+
+    @Override
+    public int amountOfTracking(Class<? extends Tracking> tracking) {
+        return this.trackers.containsKey(tracking) ? this.trackers.get(tracking).size() : 0;
+    }
 }

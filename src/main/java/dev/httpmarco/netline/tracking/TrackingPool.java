@@ -84,4 +84,11 @@ public interface TrackingPool {
      * @return the responder
      */
     RequestChannelResponder<?, ?> responder(String requestID);
+
+    /**
+     * Get the amount of tracking of a specific type
+     * @param tracking the tracking type
+     * @return the amount of tracking
+     */
+    int amountOfTracking(Class<? extends Tracking> tracking);
 }

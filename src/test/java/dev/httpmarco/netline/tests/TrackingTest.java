@@ -7,6 +7,7 @@ import dev.httpmarco.netline.server.NetServer;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -48,7 +49,7 @@ public class TrackingTest {
     @Test
     @Order(3)
     @DisplayName("3.3 Register tracking and call this from client to server")
-    public void waitForRemoteTracking() {
+    public void waitForRemoteClientTracking() {
         this.client.boot().sync();
 
         var requestResponse = new AtomicBoolean();
@@ -56,6 +57,19 @@ public class TrackingTest {
         client.send(new EmptyTestPacket());
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(requestResponse);
         assert requestResponse.get();
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("3.4 Unregister tracking")
+    public void unregisterTracking() {
+        this.client = Net.line().client();
+
+        var trackId = this.client.track(EmptyTestPacket.class, (channel, tracking) -> {});
+        assert client.trackingPool().amountOfTracking(EmptyTestPacket.class) == 1;
+
+        this.client.untrack(trackId);
+        assert client.trackingPool().amountOfTracking(EmptyTestPacket.class) == 0;
     }
 
     @AfterEach
