@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.tracking.impl;
 
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.request.RequestChannelResponder;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.tracking.ChannelTracker;
@@ -33,6 +34,14 @@ public final class DefaultTrackingPoolImpl implements TrackingPool {
     @Override
     public void clear() {
         this.trackers.clear();
+    }
+
+    @Override
+    public void callTracking(NetChannel netChannel, Tracking tracking) {
+        if(!trackers.containsKey(tracking.getClass())) {
+            return;
+        }
+        trackers.get(tracking.getClass()).values().forEach(it -> it.trackWith(netChannel, tracking));
     }
 
     @Override

@@ -66,7 +66,7 @@ public abstract class AbstractNetComp<C extends NetConfig> implements NetComp<C>
 
     @Override
     public void call(NetChannel channel, Tracking tracking) {
-        // todo
+        this.trackingPool.callTracking(channel, tracking);
     }
 
     @Override

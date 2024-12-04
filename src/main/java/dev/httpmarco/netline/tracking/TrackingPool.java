@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.tracking;
 
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.request.RequestChannelResponder;
 import dev.httpmarco.netline.request.RequestResponder;
 import dev.httpmarco.netline.request.RequestScheme;
@@ -22,6 +23,13 @@ public interface TrackingPool {
      * Clear all tracking and responders
      */
     void clear();
+
+    /**
+     * Call a tracking by id
+     * @param netChannel the net channel
+     * @param tracking the tracking
+     */
+    void callTracking(NetChannel netChannel, Tracking tracking);
 
     /**
      * Remove a current racking by id
