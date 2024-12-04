@@ -46,7 +46,7 @@ public abstract class AbstractNetCompHandler extends SimpleChannelInboundHandler
             var responder = this.netComp.trackingPool().responder(request.requestId());
 
             log.debug("Call responder for request id: {}", request.requestId());
-            var respond = responder.respond(null, channel);
+            var respond = responder.respondWith(RespondPacketTranslator.translatePacket(request.request()), channel);
             var responsePacket = RespondPacketTranslator.translate(respond);
 
             System.out.println(channel.id());
@@ -68,6 +68,7 @@ public abstract class AbstractNetCompHandler extends SimpleChannelInboundHandler
         /// todo: generate by comp factory
         var newChannel = new DefaultNetChannel(ctx.channel());
 
+        // we save the channel without an id
         this.netChannelOpen(newChannel);
     }
 
