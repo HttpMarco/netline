@@ -13,7 +13,15 @@ Example of a Simple Request Scheme:
 RequestScheme.from("request_id", String.class, Long.class);
 ```
 
-### 3.2 Send the first request
+### 3.2 Define the response of a request
+If you send a request to the server, the server must handle this request. This can be achieved using responders.
+Responders process the incoming request and allow you to generate an appropriate response. The response type must match the type defined in the request scheme.
+```java
+// register the response for the defined scheme. Result here is Long.
+server.waitFor(myRequestScheme, (id, channel) -> 99);
+```
+
+### 3.3 Send the first request
 With any component that has a `TrackingProvider`, you can send a request to a specific channel.
 In the following example, we send a synchronous request using the previously defined scheme. We send a String and receive a long in return.
 ```java
