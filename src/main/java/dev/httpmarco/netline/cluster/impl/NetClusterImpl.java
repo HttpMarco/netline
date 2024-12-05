@@ -6,6 +6,12 @@ import dev.httpmarco.netline.utils.NetFuture;
 
 public final class NetClusterImpl implements NetCluster {
 
+    private NetNode headNode;
+
+    public NetClusterImpl(NetNode headNode) {
+        this.headNode = headNode;
+    }
+
     @Override
     public NetNode headNode() {
         return null;

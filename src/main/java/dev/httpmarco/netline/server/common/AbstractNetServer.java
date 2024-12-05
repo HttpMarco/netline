@@ -2,6 +2,7 @@ package dev.httpmarco.netline.server.common;
 
 import dev.httpmarco.netline.Available;
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.NetConfig;
 import dev.httpmarco.netline.broadcast.Broadcast;
 import dev.httpmarco.netline.broadcast.impl.BroadcastImpl;
 import dev.httpmarco.netline.broadcast.packets.BroadcastPacket;
@@ -23,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig> implements NetServer {
+public abstract class AbstractNetServer<T extends NetConfig> extends AbstractNetComp<T> implements NetServer<T> {
 
     private final static int NET_SERVER_GROUP_THREADS = 1;
     private static final Logger log = LogManager.getLogger(AbstractNetServer.class);
@@ -31,8 +32,8 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
     private final Collection<NetChannel> clients = new LinkedList<>();
     private final EventLoopGroup workerGroup = NetworkNettyUtils.createEventLoopGroup(0);
 
-    public AbstractNetServer() {
-        super(new NetServerConfig(), NET_SERVER_GROUP_THREADS);
+    public AbstractNetServer(T config) {
+        super(config, NET_SERVER_GROUP_THREADS);
 
         this.waitFor(RequestScheme.CLIENT_AUTH, (id, channel) -> {
             // set channel name here
