@@ -5,6 +5,7 @@ import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.packet.basic.BooleanPacket;
 import dev.httpmarco.netline.request.impl.Request;
 import lombok.experimental.UtilityClass;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Log4j2
 @UtilityClass
 public final class NetRequestPool {
 
     private final Map<UUID, Request<?, ?>> requests = new HashMap<>();
-    private static final Logger log = LogManager.getLogger(NetRequestPool.class);
 
     public void put(Request<?, ?> request) {
         requests.put(request.id(), request);
