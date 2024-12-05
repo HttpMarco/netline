@@ -60,7 +60,7 @@ public class BroadcastTest {
         var externalClient = Net.line().client();
         externalClient.boot().sync();
 
-        externalClient.track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
+        externalClient.track(EmptyTestPacket.class, (channel, packet) -> result.set(true));
         client.broadcast().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
