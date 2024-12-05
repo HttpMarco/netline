@@ -49,4 +49,9 @@ public abstract class AbstractNetChannel implements NetChannel {
         this.id = id;
         // todo call maybe on a valid connection
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof AbstractNetChannel netChannel && netChannel.channel.equals(channel);
+    }
 }
