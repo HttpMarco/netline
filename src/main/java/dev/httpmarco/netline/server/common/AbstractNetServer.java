@@ -46,16 +46,12 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
         track(BroadcastPacket.class, (channel, tracking) -> {
             this.call(channel, tracking.packet());
 
-            System.out.println("From: " + channel.id());
-
             // redirect to other clients
             for (var client : availableClients()) {
-                System.err.println(client.id());
                 if(client.equals(channel)) {
                     // we're not sending the server his self the packet
                     continue;
                 }
-                System.err.println("to: " + client.id());
                 // here we need only the content for the client. Not the broadcast packet.
                 channel.send(tracking.packet());
             }
