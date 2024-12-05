@@ -52,6 +52,6 @@ public abstract class AbstractNetChannel implements NetChannel {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof AbstractNetChannel netChannel && netChannel.channel.equals(channel) && netChannel.id.equals(id);
+        return obj instanceof AbstractNetChannel netChannel && netChannel.channel.equals(channel) && (netChannel.id == null || netChannel.id.equals(id));
     }
 }
