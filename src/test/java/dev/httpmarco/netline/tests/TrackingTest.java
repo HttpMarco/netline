@@ -6,8 +6,6 @@ import dev.httpmarco.netline.packets.EmptyTestPacket;
 import dev.httpmarco.netline.server.NetServer;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
-
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -41,7 +39,7 @@ public class TrackingTest {
     public void waitForLocalTracking() {
         var requestResponse = new AtomicBoolean();
         this.client.track(EmptyTestPacket.class, (channel, tracking) -> requestResponse.set(true));
-        this.client.call(null, new EmptyTestPacket());
+        this.client.call(client, new EmptyTestPacket());
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(requestResponse);
         assert requestResponse.get();
     }
