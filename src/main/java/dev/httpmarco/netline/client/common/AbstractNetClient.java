@@ -95,6 +95,6 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
 
     @Override
     public Broadcast broadcast() {
-        return new NetClientBroadcast(this);
+        return new NetClientBroadcast(this, this);
     }
 }

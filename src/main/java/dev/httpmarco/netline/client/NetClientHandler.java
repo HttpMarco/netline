@@ -3,8 +3,10 @@ package dev.httpmarco.netline.client;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.client.common.AbstractNetClient;
 import dev.httpmarco.netline.common.AbstractNetCompHandler;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.RequestScheme;
 import io.netty5.channel.Channel;
+import io.netty5.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +18,12 @@ public final class NetClientHandler extends AbstractNetCompHandler {
     public NetClientHandler(AbstractNetClient client) {
         super(client);
         this.client = client;
+    }
+
+    @Override
+    public void messageReceived(@NotNull ChannelHandlerContext ctx, Packet packet) {
+        log.info("Packt kommt an: " + packet.getClass().getSimpleName());
+        super.messageReceived(ctx, packet);
     }
 
     @Override

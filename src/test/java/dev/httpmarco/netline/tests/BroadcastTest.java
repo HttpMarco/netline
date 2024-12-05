@@ -33,7 +33,7 @@ public class BroadcastTest {
     public void serverBroadcast() {
         var result = new AtomicBoolean();
         client.track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
-        server.broadcast().send(new EmptyTestPacket());
+        server.broadcast().toAll().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
         assert result.get();
@@ -45,7 +45,7 @@ public class BroadcastTest {
     public void clientBroadcast() {
         var result = new AtomicBoolean();
         server.track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
-        client.broadcast().send(new EmptyTestPacket());
+        client.broadcast().toAll().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
         assert result.get();
@@ -61,10 +61,22 @@ public class BroadcastTest {
         externalClient.boot().sync();
 
         externalClient.track(EmptyTestPacket.class, (channel, packet) -> result.set(true));
-        client.broadcast().send(new EmptyTestPacket());
+        client.broadcast().toAll().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
         externalClient.close().sync();
+        assert result.get();
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("4.4 Broadcast from client and notify also himself")
+    public void broadcastHimself() {
+        var result = new AtomicBoolean();
+
+        client.track(EmptyTestPacket.class, (channel, packet) -> result.set(true));
+        client.broadcast().toAll().toMe().send(new EmptyTestPacket());
+
         assert result.get();
     }
 

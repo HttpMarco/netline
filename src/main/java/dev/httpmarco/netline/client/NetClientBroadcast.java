@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.client;
 
+import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.broadcast.impl.BroadcastImpl;
 import dev.httpmarco.netline.broadcast.packets.BroadcastPacket;
 import dev.httpmarco.netline.channel.NetChannel;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public final class NetClientBroadcast extends BroadcastImpl {
 
-    public NetClientBroadcast(NetChannel channel) {
-        super(List.of(channel));
+    public NetClientBroadcast(NetComp<?> comp, NetChannel channel) {
+        super(comp, List.of(channel));
     }
 
     @Override

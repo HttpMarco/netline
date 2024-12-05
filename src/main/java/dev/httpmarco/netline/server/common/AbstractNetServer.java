@@ -121,6 +121,6 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     @Override
     public Broadcast broadcast() {
-        return new BroadcastImpl(availableClients());
+        return new BroadcastImpl(this, availableClients());
     }
 }
