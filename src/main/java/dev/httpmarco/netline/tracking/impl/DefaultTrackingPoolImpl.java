@@ -37,11 +37,12 @@ public final class DefaultTrackingPoolImpl implements TrackingPool {
     }
 
     @Override
-    public void callTracking(NetChannel netChannel, @NotNull Tracking tracking) {
+    public void callTracking(NetChannel channel, @NotNull Tracking tracking) {
         if(!trackers.containsKey(tracking.getClass())) {
             return;
         }
-        trackers.get(tracking.getClass()).values().forEach(it -> it.trackWith(netChannel, tracking));
+        log.debug("Call tracking: {} from {}. Found {} trackers", tracking.getClass().getSimpleName(), channel.id(), trackers.get(tracking.getClass()).size());
+        trackers.get(tracking.getClass()).values().forEach(it -> it.trackWith(channel, tracking));
     }
 
     @Override
