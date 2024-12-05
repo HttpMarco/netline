@@ -2,9 +2,10 @@ package dev.httpmarco.netline.client.common;
 
 import dev.httpmarco.netline.NetAddress;
 import dev.httpmarco.netline.NetCompHandler;
-import dev.httpmarco.netline.channel.NetChannel;
+import dev.httpmarco.netline.broadcast.Broadcast;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.client.NetClient;
+import dev.httpmarco.netline.client.NetClientBroadcast;
 import dev.httpmarco.netline.client.NetClientConfig;
 import dev.httpmarco.netline.client.NetClientHandler;
 import dev.httpmarco.netline.common.AbstractNetComp;
@@ -90,5 +91,10 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
     @Override
     public String id() {
         return this.config().id;
+    }
+
+    @Override
+    public Broadcast broadcast() {
+        return new NetClientBroadcast(this);
     }
 }
