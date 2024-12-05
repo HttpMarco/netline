@@ -17,9 +17,11 @@ import io.netty5.channel.EventLoopGroup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.UUID;
 
+@Log4j2
 @Accessors(fluent = true)
 @Getter
 public abstract class AbstractNetComp<C extends NetConfig> implements NetComp<C> {

@@ -2,6 +2,9 @@ package dev.httpmarco.netline.server.common;
 
 import dev.httpmarco.netline.Available;
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.broadcast.Broadcast;
+import dev.httpmarco.netline.broadcast.impl.BroadcastImpl;
+import dev.httpmarco.netline.broadcast.packets.BroadcastPacket;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
@@ -38,6 +41,24 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
             log.debug("Client {} has been authenticated", id);
             return true;
+        });
+
+        track(BroadcastPacket.class, (channel, tracking) -> {
+            this.call(channel, tracking.packet());
+
+            System.out.println("From: " + channel.id());
+
+            // redirect to other clients
+            for (var client : availableClients()) {
+                System.err.println(client.id());
+                if(client.equals(channel)) {
+                    // we're not sending the server his self the packet
+                    continue;
+                }
+                System.err.println("to: " + client.id());
+                // here we need only the content for the client. Not the broadcast packet.
+                channel.send(tracking.packet());
+            }
         });
     }
 
@@ -100,5 +121,10 @@ public abstract class AbstractNetServer extends AbstractNetComp<NetServerConfig>
 
     public void unregisterChannel(NetChannel channel) {
         this.clients.remove(channel);
+    }
+
+    @Override
+    public Broadcast broadcast() {
+        return new BroadcastImpl(availableClients());
     }
 }
