@@ -59,6 +59,7 @@ public abstract class AbstractNetCompHandler extends SimpleChannelInboundHandler
             return;
         }
 
+        log.debug("Received new packet: {} on channel {}", packet, channel.id());
         this.netComp.call(channel, packet);
     }
 
