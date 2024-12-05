@@ -1,12 +1,13 @@
 package dev.httpmarco.netline;
 
+import dev.httpmarco.netline.broadcast.Broadcastable;
 import dev.httpmarco.netline.tracking.TrackingProvider;
 import dev.httpmarco.netline.utils.NetFuture;
 
 /**
  * A network component.
  */
-public interface NetComp<C extends NetConfig> extends Available, TrackingProvider, Closeable {
+public interface NetComp<C extends NetConfig> extends Available, TrackingProvider, Closeable, Broadcastable {
 
     /**
      * Boot the component.
