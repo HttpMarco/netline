@@ -3,12 +3,15 @@ package dev.httpmarco.netline.channel.common;
 import dev.httpmarco.netline.NetAddress;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.utils.NetFuture;
 import io.netty5.channel.Channel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 @Getter
 @Log4j2
@@ -53,5 +56,10 @@ public abstract class AbstractNetChannel implements NetChannel {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof AbstractNetChannel netChannel && netChannel.channel.equals(channel) && (netChannel.id == null || netChannel.id.equals(id));
+    }
+
+    @Override
+    public void callRequest(NetChannel channel, UUID requestId, Packet response) {
+        NetRequestPool.applyRequest(requestId, channel, response);
     }
 }

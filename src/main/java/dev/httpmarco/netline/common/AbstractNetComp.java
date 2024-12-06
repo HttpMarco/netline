@@ -3,8 +3,6 @@ package dev.httpmarco.netline.common;
 import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.NetConfig;
 import dev.httpmarco.netline.channel.NetChannel;
-import dev.httpmarco.netline.packet.Packet;
-import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.request.RequestChannelResponder;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.tracking.ChannelTracker;
@@ -74,10 +72,5 @@ public abstract class AbstractNetComp<C extends NetConfig> implements NetComp<C>
     @Override
     public <R, T> void waitFor(RequestScheme<R, T> id, RequestChannelResponder<R, T> result) {
         this.trackingPool.responderOf(id, result);
-    }
-
-    @Override
-    public void callRequest(NetChannel channel, UUID requestId, Packet response) {
-        NetRequestPool.applyRequest(requestId, channel, response);
     }
 }

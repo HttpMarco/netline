@@ -3,6 +3,7 @@ package dev.httpmarco.netline.client.common;
 import dev.httpmarco.netline.NetAddress;
 import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.broadcast.Broadcast;
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.client.NetClientBroadcast;
@@ -11,6 +12,7 @@ import dev.httpmarco.netline.client.NetClientHandler;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.NetRequest;
+import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.request.RequestScheme;
 import dev.httpmarco.netline.request.impl.Request;
 import dev.httpmarco.netline.utils.NetFuture;
@@ -24,6 +26,8 @@ import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -96,5 +100,10 @@ public abstract class AbstractNetClient extends AbstractNetComp<NetClientConfig>
     @Override
     public Broadcast broadcast() {
         return new NetClientBroadcast(this, this);
+    }
+
+    @Override
+    public void callRequest(NetChannel channel, UUID requestId, Packet response) {
+        NetRequestPool.applyRequest(requestId, channel, response);
     }
 }

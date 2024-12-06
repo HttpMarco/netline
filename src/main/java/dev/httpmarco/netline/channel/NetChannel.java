@@ -4,9 +4,10 @@ import dev.httpmarco.netline.Available;
 import dev.httpmarco.netline.Closeable;
 import dev.httpmarco.netline.NetAddress;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.request.RequestProvider;
 import io.netty5.channel.Channel;
 
-public interface NetChannel extends Available, Closeable {
+public interface NetChannel extends Available, Closeable, RequestProvider {
 
     /**
      * Get the id of the channel.

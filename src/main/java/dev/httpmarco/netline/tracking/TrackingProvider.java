@@ -1,11 +1,10 @@
 package dev.httpmarco.netline.tracking;
 
 import dev.httpmarco.netline.channel.NetChannel;
-import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.*;
 import java.util.UUID;
 
-public interface TrackingProvider extends RequestProvider, ResponderProvider {
+public interface TrackingProvider extends ResponderProvider {
 
     /**
      * Track a specific tracking type with a tracker

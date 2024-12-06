@@ -55,7 +55,7 @@ public abstract class AbstractNetCompHandler extends SimpleChannelInboundHandler
         }
 
         if(packet instanceof ResponsePacket response) {
-             this.netComp.callRequest(channel, response.id(), response.packet());
+             channel.callRequest(channel, response.id(), response.packet());
             return;
         }
 
