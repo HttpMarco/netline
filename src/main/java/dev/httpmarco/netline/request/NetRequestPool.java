@@ -40,4 +40,13 @@ public final class NetRequestPool {
 
         //todo other values
     }
+
+    public int amountOfRequests() {
+        return requests.size();
+    }
+
+    public void removeExceptionallyRequest(UUID id) {
+        requests.get(id).completeFuture().completeExceptionally(new Exception("Request failed"));
+        requests.remove(id);
+    }
 }
