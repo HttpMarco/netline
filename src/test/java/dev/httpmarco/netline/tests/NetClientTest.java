@@ -8,7 +8,7 @@ import org.junit.jupiter.api.*;
 @Nested
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("2 - NetClient test")
-public class NetClientTest {
+public final class NetClientTest {
 
     private NetServer server;
     private NetClient client;

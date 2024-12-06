@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 @Nested
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("1 - NetServer test")
-public class NetServerTest {
+public final class NetServerTest {
 
     private NetServer server;
 
