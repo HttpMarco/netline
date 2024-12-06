@@ -36,8 +36,9 @@ public final class NetRequestPool {
             request.complete(response);
         } else if (response instanceof BooleanPacket booleanPacket) {
             request.complete(booleanPacket.value());
+        } else {
+            System.out.println("Request completed!!!!");
         }
-
         //todo other values
     }
 

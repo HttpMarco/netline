@@ -10,9 +10,11 @@ import dev.httpmarco.netline.utils.NetFuture;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
+@Log4j2
 @Getter
 @Accessors(fluent = true)
 public final class Request<R, A> implements NetRequest<R, A> {
@@ -33,6 +35,7 @@ public final class Request<R, A> implements NetRequest<R, A> {
     public @NotNull NetFuture<A> send(R request) {
         // register the request for identification the response
         NetRequestPool.put(this);
+        log.debug("Register request with id: {}", id);
 
         this.channel.send(new RequestPacket(requestScheme().id(), id, RespondPacketTranslator.translate(request)));
         return completeFuture;
