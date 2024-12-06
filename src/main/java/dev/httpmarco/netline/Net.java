@@ -3,8 +3,10 @@ package dev.httpmarco.netline;
 import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.client.impl.NetClientImpl;
 import dev.httpmarco.netline.cluster.NetCluster;
+import dev.httpmarco.netline.cluster.NetNodeData;
 import dev.httpmarco.netline.cluster.impl.NetClusterImpl;
 import dev.httpmarco.netline.server.NetServer;
+import dev.httpmarco.netline.server.NetServerConfig;
 import dev.httpmarco.netline.server.impl.NetServerImpl;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,7 @@ public final class Net {
     }
 
     @Contract(value = " -> new", pure = true)
-    public @NotNull NetServer server() {
+    public @NotNull NetServer<NetServerConfig> server() {
         return new NetServerImpl();
     }
 
@@ -31,7 +33,7 @@ public final class Net {
     }
 
     @Contract(value = " -> new", pure = true)
-    public @NotNull NetCluster cluster() {
-        return new NetClusterImpl();
+    public @NotNull NetCluster<NetNodeData> cluster() {
+        return new NetClusterImpl<>();
     }
 }

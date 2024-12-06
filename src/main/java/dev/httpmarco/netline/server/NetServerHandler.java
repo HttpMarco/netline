@@ -9,9 +9,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public final class NetServerHandler extends AbstractNetCompHandler {
 
-    private final AbstractNetServer server;
+    private final AbstractNetServer<?> server;
 
-    public NetServerHandler(AbstractNetServer server) {
+    public NetServerHandler(AbstractNetServer<?> server) {
         super(server);
         this.server = server;
     }
