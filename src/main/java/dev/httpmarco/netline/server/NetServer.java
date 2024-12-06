@@ -1,13 +1,12 @@
 package dev.httpmarco.netline.server;
 
 import dev.httpmarco.netline.NetComp;
-import dev.httpmarco.netline.NetConfig;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.tracking.TrackingProvider;
 
 import java.util.Collection;
 
-public interface NetServer<T extends NetConfig> extends NetComp<T>, TrackingProvider {
+public interface NetServer extends NetComp<NetServerConfig>, TrackingProvider {
 
     /**
      * Get the amount of all connected clients. Ignore availability

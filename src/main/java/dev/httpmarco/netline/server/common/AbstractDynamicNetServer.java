@@ -10,29 +10,26 @@ import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.request.RequestScheme;
-import dev.httpmarco.netline.server.NetServer;
-import dev.httpmarco.netline.server.NetServerConfig;
 import dev.httpmarco.netline.server.NetServerHandler;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.ChannelOption;
 import io.netty5.channel.EventLoopGroup;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class AbstractNetServer<T extends NetConfig> extends AbstractNetComp<T> implements NetServer<T> {
+@Log4j2
+public abstract class AbstractDynamicNetServer<C extends NetConfig> extends AbstractNetComp<C>{
 
     private final static int NET_SERVER_GROUP_THREADS = 1;
-    private static final Logger log = LogManager.getLogger(AbstractNetServer.class);
 
     private final Collection<NetChannel> clients = new LinkedList<>();
     private final EventLoopGroup workerGroup = NetworkNettyUtils.createEventLoopGroup(0);
 
-    public AbstractNetServer(T config) {
+    public AbstractDynamicNetServer(C config) {
         super(config, NET_SERVER_GROUP_THREADS);
 
         this.waitFor(RequestScheme.CLIENT_AUTH, (id, channel) -> {
@@ -97,27 +94,24 @@ public abstract class AbstractNetServer<T extends NetConfig> extends AbstractNet
         return new NetServerHandler(this);
     }
 
-    @Override
-    public int amountOfClients() {
-        return this.clients.size();
-    }
-
-    @Override
-    public Collection<NetChannel> allClients() {
-        return Collections.unmodifiableCollection(clients);
-    }
-
-    @Override
-    public Collection<NetChannel> availableClients() {
-        return this.clients.stream().filter(Available::available).toList();
-    }
-
     public void registerChannel(NetChannel channel) {
         this.clients.add(channel);
     }
 
     public void unregisterChannel(NetChannel channel) {
         this.clients.remove(channel);
+    }
+
+    public Collection<NetChannel> allClients() {
+        return Collections.unmodifiableCollection(clients);
+    }
+
+    public int amountOfClients() {
+        return this.clients.size();
+    }
+
+    public Collection<NetChannel> availableClients() {
+        return this.clients.stream().filter(Available::available).toList();
     }
 
     @Override

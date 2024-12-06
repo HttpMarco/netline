@@ -6,7 +6,6 @@ import dev.httpmarco.netline.cluster.NetCluster;
 import dev.httpmarco.netline.cluster.NetNodeData;
 import dev.httpmarco.netline.cluster.impl.NetClusterImpl;
 import dev.httpmarco.netline.server.NetServer;
-import dev.httpmarco.netline.server.NetServerConfig;
 import dev.httpmarco.netline.server.impl.NetServerImpl;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public final class Net {
     }
 
     @Contract(value = " -> new", pure = true)
-    public @NotNull NetServer<NetServerConfig> server() {
+    public @NotNull NetServer server() {
         return new NetServerImpl();
     }
 

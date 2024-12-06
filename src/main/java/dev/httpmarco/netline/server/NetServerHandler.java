@@ -2,16 +2,16 @@ package dev.httpmarco.netline.server;
 
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.common.AbstractNetCompHandler;
-import dev.httpmarco.netline.server.common.AbstractNetServer;
+import dev.httpmarco.netline.server.common.AbstractDynamicNetServer;
 import io.netty5.channel.Channel;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public final class NetServerHandler extends AbstractNetCompHandler {
 
-    private final AbstractNetServer<?> server;
+    private final AbstractDynamicNetServer<?> server;
 
-    public NetServerHandler(AbstractNetServer<?> server) {
+    public NetServerHandler(AbstractDynamicNetServer<?> server) {
         super(server);
         this.server = server;
     }
