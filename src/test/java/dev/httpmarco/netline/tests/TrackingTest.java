@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Nested
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("3 - Tracking test")
-public class TrackingTest {
+public final class TrackingTest {
 
     private NetServer server;
     private NetClient client;
