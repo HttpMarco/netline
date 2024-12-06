@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.tests;
 
+import dev.httpmarco.netline.BaseTest;
 import dev.httpmarco.netline.Net;
 import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.packets.EmptyTestPacket;
@@ -13,27 +14,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Nested
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("4 - Broadcast test")
-public final class BroadcastTest {
-
-    private NetServer server;
-    private NetClient client;
-
-    @BeforeEach
-    public void init() {
-        this.client = Net.line().client();
-        this.server = Net.line().server();
-
-        this.server.boot().sync();
-        this.client.boot().sync();
-    }
+public final class BroadcastTest extends BaseTest {
 
     @Test
     @Order(1)
     @DisplayName("4.1 Broadcast from server to all clients")
     public void serverBroadcast() {
         var result = new AtomicBoolean();
-        client.track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
-        server.broadcast().toAll().send(new EmptyTestPacket());
+        client().track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
+        server().broadcast().toAll().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
         assert result.get();
@@ -44,8 +33,8 @@ public final class BroadcastTest {
     @DisplayName("4.2 Broadcast from client to server")
     public void clientBroadcast() {
         var result = new AtomicBoolean();
-        server.track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
-        client.broadcast().toAll().send(new EmptyTestPacket());
+        server().track(EmptyTestPacket.class, (channel, tracking) -> result.set(true));
+        client().broadcast().toAll().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
         assert result.get();
@@ -61,7 +50,7 @@ public final class BroadcastTest {
         externalClient.boot().sync();
 
         externalClient.track(EmptyTestPacket.class, (channel, packet) -> result.set(true));
-        client.broadcast().toAll().send(new EmptyTestPacket());
+        client().broadcast().toAll().send(new EmptyTestPacket());
 
         Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(result);
         externalClient.close().sync();
@@ -74,15 +63,9 @@ public final class BroadcastTest {
     public void broadcastHimself() {
         var result = new AtomicBoolean();
 
-        client.track(EmptyTestPacket.class, (channel, packet) -> result.set(true));
-        client.broadcast().toAll().toMe().send(new EmptyTestPacket());
+        client().track(EmptyTestPacket.class, (channel, packet) -> result.set(true));
+        client().broadcast().toAll().toMe().send(new EmptyTestPacket());
 
         assert result.get();
-    }
-
-    @AfterEach
-    public void afterAll() {
-        this.client.close().sync();
-        this.server.close().sync();
     }
 }
