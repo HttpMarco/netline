@@ -33,3 +33,4 @@ var timeResuelt = client.request(myRequestScheme).send("TestProfile").sync();
 [ ] tracking readme
 [ ] dependency readme
 [ ] update id 
+[ ] remove request if server close the connection
