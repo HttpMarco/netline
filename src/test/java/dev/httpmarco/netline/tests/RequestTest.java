@@ -1,7 +1,6 @@
 package dev.httpmarco.netline.tests;
 
 import dev.httpmarco.netline.BaseTest;
-import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.request.NetRequestPool;
 import dev.httpmarco.netline.request.RequestScheme;
 import org.awaitility.Awaitility;
@@ -58,7 +57,7 @@ public final class RequestTest extends BaseTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @DisplayName("5.5 Register a new sync request from server to client")
     public void registerNewChannelServerSideRequest() {
         this.client().waitFor(requestScheme, (request) -> true);
@@ -69,5 +68,21 @@ public final class RequestTest extends BaseTest {
             assert client.request(requestScheme).send("abc").sync();
             break;
         }
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("5.6 Register a new async request from server to client")
+    public void registerNewChannelServerAsyncSideRequest() {
+        this.client().waitFor(requestScheme, (request) -> true);
+        var requestResponse = new AtomicBoolean();
+        assert !this.server().allClients().isEmpty();
+
+        for (var client : this.server().allClients()) {
+            client.request(requestScheme).send("abc").whenComplete((it, throwable) -> requestResponse.set(it));
+            break;
+        }
+        Awaitility.await().atMost(3, TimeUnit.SECONDS).untilTrue(requestResponse);
+        assert requestResponse.get();
     }
 }
