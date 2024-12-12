@@ -10,6 +10,7 @@ import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.common.AbstractNetComp;
 import dev.httpmarco.netline.request.RequestScheme;
+import dev.httpmarco.netline.server.NetServerClientHandler;
 import dev.httpmarco.netline.server.NetServerHandler;
 import dev.httpmarco.netline.utils.NetFuture;
 import dev.httpmarco.netline.utils.NetworkNettyUtils;
@@ -22,7 +23,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Log4j2
-public abstract class AbstractDynamicNetServer<C extends NetConfig> extends AbstractNetComp<C>{
+public abstract class AbstractDynamicNetServer<C extends NetConfig> extends AbstractNetComp<C> implements NetServerClientHandler {
 
     private final static int NET_SERVER_GROUP_THREADS = 1;
 
@@ -110,12 +111,8 @@ public abstract class AbstractDynamicNetServer<C extends NetConfig> extends Abst
         return this.clients.size();
     }
 
-    public Collection<NetChannel> availableClients() {
-        return this.clients.stream().filter(Available::available).toList();
-    }
-
     @Override
     public Broadcast broadcast() {
-        return new BroadcastImpl(this, availableClients());
+        return new BroadcastImpl(this, this.availableClients());
     }
 }

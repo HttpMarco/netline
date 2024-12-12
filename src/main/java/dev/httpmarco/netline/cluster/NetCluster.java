@@ -4,8 +4,9 @@ import dev.httpmarco.netline.Available;
 import dev.httpmarco.netline.Bootable;
 import dev.httpmarco.netline.Closeable;
 import dev.httpmarco.netline.NetAddress;
+import dev.httpmarco.netline.server.NetServerClientHandler;
 
-public interface NetCluster<D extends NetNodeData> extends Available, Closeable, Bootable {
+public interface NetCluster<D extends NetNodeData> extends Available, Closeable, Bootable, NetServerClientHandler {
 
     /**
      * Get the head node of the cluster.

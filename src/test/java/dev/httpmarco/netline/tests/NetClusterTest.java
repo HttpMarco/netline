@@ -11,19 +11,19 @@ import org.junit.jupiter.api.*;
 @DisplayName("6 - Node test")
 public final class NetClusterTest {
 
-    private final NetCluster<NetNodeData> cluster = Net.line().cluster();
+    private NetCluster<NetNodeData> cluster;
 
     @BeforeEach
     public void beforeEach() {
+        this.cluster = Net.line().cluster();
         this.cluster.boot().sync();
-        assert this.cluster.available();
-        assert this.cluster.localNode().state() == NetNodeState.READY;
     }
 
     @Test
     @Order(1)
     @DisplayName("6.1 Boot first node")
     public void handleClusterBoot() {
-
+        assert this.cluster.available();
+        assert this.cluster.localNode().state() == NetNodeState.READY;
     }
 }

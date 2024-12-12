@@ -1,11 +1,14 @@
 package dev.httpmarco.netline.cluster.impl;
 
 import dev.httpmarco.netline.NetAddress;
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.cluster.*;
 import dev.httpmarco.netline.utils.NetFuture;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 @Getter
 @Accessors(fluent = true)
@@ -13,6 +16,8 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
     private NetNode<D> headNode;
     private final LocalNetNode<D> localNode;
+
+    private final Collection<NetChannel> clients = new ArrayList<>();
 
     public NetClusterImpl() {
         // todo‚
@@ -59,5 +64,15 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
         });
 
         return future;
+    }
+
+    @Override
+    public int amountOfClients() {
+        return this.clients.size();
+    }
+
+    @Override
+    public Collection<NetChannel> allClients() {
+        return Collections.unmodifiableCollection(this.clients);
     }
 }
