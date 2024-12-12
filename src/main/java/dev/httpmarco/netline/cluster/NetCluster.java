@@ -6,6 +6,8 @@ import dev.httpmarco.netline.Closeable;
 import dev.httpmarco.netline.NetAddress;
 import dev.httpmarco.netline.server.NetServerClientHandler;
 
+import java.util.Collection;
+
 public interface NetCluster<D extends NetNodeData> extends Available, Closeable, Bootable, NetServerClientHandler {
 
     /**
@@ -36,5 +38,11 @@ public interface NetCluster<D extends NetNodeData> extends Available, Closeable,
      * @param node the current cluster node
      */
     void unregisterNode(NetNode<D> node);
+
+    /**
+     * Get all nodes of the cluster
+     * @return a list of nodes
+     */
+    Collection<NetNode<D>> nodes();
 
 }

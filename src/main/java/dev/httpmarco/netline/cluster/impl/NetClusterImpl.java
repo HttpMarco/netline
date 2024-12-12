@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 
 @Getter
 @Accessors(fluent = true)
@@ -17,6 +18,7 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
     private NetNode<D> headNode;
     private final LocalNetNode<D> localNode;
 
+    private final Collection<NetNode<D>> nodes = new ArrayList<>();
     private final Collection<NetChannel> clients = new ArrayList<>();
 
     public NetClusterImpl() {
@@ -26,7 +28,11 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
     @Override
     public void searchHeadNode() {
-
+        // Find the head node by the starting time.
+        // The oldest node are the head node
+        this.headNode = this.nodes.stream()
+                .min(Comparator.comparingLong(value -> value.data().initializationTime()))
+                .orElseThrow();
     }
 
     @Override
@@ -52,6 +58,8 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
     @Override
     public NetFuture<Void> boot() {
         var future = new NetFuture<Void>();
+
+        this.searchHeadNode();
 
         //todo add other nodes
         //todo search the new head node
