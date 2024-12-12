@@ -7,13 +7,7 @@ import dev.httpmarco.netline.utils.NetFuture;
 /**
  * A network component.
  */
-public interface NetComp<C extends NetConfig> extends Available, TrackingProvider, Closeable, Broadcastable {
-
-    /**
-     * Boot the component.
-     * @return a future that will be completed when the component is booted.
-     */
-    NetFuture<Void> boot();
+public interface NetComp<C extends NetConfig> extends Available, TrackingProvider, Closeable, Broadcastable, Bootable {
 
     /**
      * Get the configuration of the component.

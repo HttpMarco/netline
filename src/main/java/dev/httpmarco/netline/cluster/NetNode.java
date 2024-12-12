@@ -19,4 +19,10 @@ public interface NetNode<D extends NetNodeData> {
      */
     long lastDataUpdate();
 
+    /**
+     * Current state of the node
+     * @return the state
+     */
+    NetNodeState state();
+
 }

@@ -1,10 +1,11 @@
 package dev.httpmarco.netline.cluster;
 
 import dev.httpmarco.netline.Available;
+import dev.httpmarco.netline.Bootable;
 import dev.httpmarco.netline.Closeable;
 import dev.httpmarco.netline.NetAddress;
 
-public interface NetCluster<D extends NetNodeData> extends Available, Closeable {
+public interface NetCluster<D extends NetNodeData> extends Available, Closeable, Bootable {
 
     /**
      * Get the head node of the cluster.
