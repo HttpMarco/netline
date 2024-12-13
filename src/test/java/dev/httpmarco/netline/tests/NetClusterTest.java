@@ -26,4 +26,9 @@ public final class NetClusterTest {
         assert this.cluster.available();
         assert this.cluster.localNode().state() == NetNodeState.READY;
     }
+
+    @AfterEach
+    public void handleClose() {
+        this.cluster.close().sync();
+    }
 }
