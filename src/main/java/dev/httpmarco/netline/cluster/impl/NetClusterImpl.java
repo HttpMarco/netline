@@ -28,6 +28,10 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
     @Override
     public void searchHeadNode() {
+        if(this.nodes.isEmpty()) {
+            this.headNode = this.localNode;
+            return;
+        }
         // Find the head node by the starting time.
         // The oldest node are the head node
         this.headNode = this.nodes.stream()
@@ -52,7 +56,18 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
     @Override
     public NetFuture<Void> close() {
-        return null;
+        var future = new NetFuture<Void>();
+
+        // todo find a better not duplicated logic
+        this.localNode.close().whenComplete((unused, throwable) -> {
+            if(throwable != null) {
+                future.completeExceptionally(throwable);
+            } else {
+                future.complete();
+            }
+        });
+
+        return future;
     }
 
     @Override
@@ -63,6 +78,7 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
         //todo add other nodes
         //todo search the new head node
+        // todo find a better not duplicated logic
         localNode.boot().whenComplete((unused, throwable) -> {
             if(throwable != null) {
                 future.completeExceptionally(throwable);
