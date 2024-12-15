@@ -6,6 +6,9 @@ import dev.httpmarco.netline.cluster.*;
 import dev.httpmarco.netline.utils.NetFuture;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +18,7 @@ import java.util.Comparator;
 @Accessors(fluent = true)
 public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
+    private static final Logger log = LogManager.getLogger(NetClusterImpl.class);
     private NetNode<D> headNode;
     private final LocalNetNode<D> localNode;
 
@@ -41,7 +45,14 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
 
     @Override
     public void registerNode(NetAddress address) {
+        if (inCluster(address)) {
+            log.warn("You try to add a duplicated node entry into your cluster!");
+            return;
+        }
+        var node = new ExternalNetNode<D>(address);
+        this.nodes.add(node);
 
+        // todo bind alle here
     }
 
     @Override
@@ -98,5 +109,9 @@ public class NetClusterImpl<D extends NetNodeData> implements NetCluster<D> {
     @Override
     public Collection<NetChannel> allClients() {
         return Collections.unmodifiableCollection(this.clients);
+    }
+
+    private boolean inCluster(NetAddress address) {
+        return this.nodes.stream().anyMatch(it -> it.address().equals(address));
     }
 }

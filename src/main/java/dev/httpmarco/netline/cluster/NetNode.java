@@ -1,5 +1,7 @@
 package dev.httpmarco.netline.cluster;
 
+import dev.httpmarco.netline.NetAddress;
+
 public interface NetNode<D extends NetNodeData> {
 
     /**
@@ -24,5 +26,11 @@ public interface NetNode<D extends NetNodeData> {
      * @return the state
      */
     NetNodeState state();
+
+    /**
+     * Get the address of the node
+     * @return the address
+     */
+    NetAddress address();
 
 }
